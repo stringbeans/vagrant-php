@@ -16,4 +16,10 @@ sudo ln -s /etc/apache2/mods-available/rewrite.load /etc/apache2/mods-enabled/re
 
 cp -f /vagrant/000-default.conf /etc/apache2/sites-available/.
 cp -f /vagrant/envvars /etc/apache2/.
+
+a2enmod ssl
+cp -Rf /vagrant/ssl /etc/apache2/.
+cp -f /vagrant/default-ssl.conf /etc/apache2/sites-available/.
+a2ensite default-ssl.conf
+
 service apache2 restart
