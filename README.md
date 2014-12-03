@@ -14,3 +14,5 @@ Place any web-accessible code into /html
 In the Vagrant environment, /var/www is a symbolic link to /vagrant
 
 Your web app will be accessible at 127.0.0.1 in your browser. SSL support is also enabled.
+
+**NOTE: read http://www.dmuth.org/node/1404/web-development-port-80-and-443-vagrant if you dont want to use sudo to run vagrant
