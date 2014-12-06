@@ -16,6 +16,35 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.network :forwarded_port, guest: 80, host: 8080
   config.vm.network :forwarded_port, guest: 443, host: 8443
 
+  # Check for mac version and setup port forwards
+  version = `sw_vers -productVersion`
+  yosemite_up_command_start   = 'echo "rdr pass on lo0 inet proto tcp from any to 127.0.0.1 port 80 -> 127.0.0.1 port 8080 rdr pass on lo0 inet proto tcp from any to 127.0.0.1 port 443 -> 127.0.0.1 port 8443" | sudo pfctl -f - > /dev/null 2>&1; echo "==> Fowarding Ports: 80 -> 8080, 443 -> 8443"'
+  yosemite_down_command_stop  = 'sudo pfctl -f /etc/pf.conf > /dev/null 2>&1; echo "==> Removing Port Forwarding"'
+  mavriks_up_command_stop     = 'sudo ipfw delete 00101 && sudo ipfw delete 00100'
+  mavricks_down_command_start = 'sudo ipfw add 100 fwd 127.0.0.1,8080 tcp from any to me 80 &&' +
+                                'sudo ipfw add 101 fwd 127.0.0.1,8443 tcp from any to me 443'
+
+
+  config.trigger.after [:provision, :up, :reload] do
+    if (version.gsub('.', '').to_i < 10100)
+      puts 'On Mariks adding rule to firewall'
+      system(mavricks_down_command_start)
+    else
+      puts 'On Yosemite adding rule to firewall'
+      system(yosemite_up_command_start)
+    end
+  end
+
+  config.trigger.after [:halt, :destroy] do
+    if (version.gsub('.', '').to_i < 10100)
+      puts 'On Mariks removing rule to firewall'
+      system(mavricks_down_command_stop)
+    else
+      puts 'On Yosemite removing rule to firewall'
+      system(yosemite_down_command_stop)
+    end
+  end
+
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
   # `vagrant box outdated`. This is not recommended.
