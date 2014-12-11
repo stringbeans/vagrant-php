@@ -3,6 +3,8 @@ vagrant-php
 
 Vagrant setup for a PHP box. At the time of writing, this environment is running ubuntu/trusty64 (Ubuntu LTS 14.04 64bit) with PHP 5.5.9
 
+Make sure you run this beforehand: vagrant plugin install vagrant-triggers
+
 Installation Instructions:
 
 1. vagrant up
