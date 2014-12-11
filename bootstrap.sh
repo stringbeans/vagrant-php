@@ -5,6 +5,8 @@ apt-get install -y apache2
 rm -rf /var/www
 ln -fs /vagrant /var/www
 
+dpkg -i wkhtmltox-0.12.1_linux-trusty-amd64.deb
+
 apt-get install -y php5 libapache2-mod-php5 php5-mcrypt php5-cli php5-curl php5-dbg php5-common php5-mysql php5-json php5-gd
 
 wget https://github.com/yiisoft/yii/releases/download/1.1.15/yii-1.1.15.022a51.tar.gz
